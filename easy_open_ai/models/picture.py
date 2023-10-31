@@ -5,8 +5,6 @@ import base64
 
 from .api_key import OPENAI_API_KEY
 
-openai.api_key = OPENAI_API_KEY
-
 def normalize_file_name(file_name):
     # Remove leading and trailing whitespace
     file_name = file_name.strip()
@@ -51,6 +49,7 @@ class PictureGenerator:
         self.format = format  #'b64_json'
 
     def task(self) -> list:
+        openai.api_key = OPENAI_API_KEY
         response = openai.Image.create(
             prompt=self.user_input, n=self.n, response_format=self.format
         )
@@ -60,6 +59,7 @@ class PictureGenerator:
         return result
 
     async def async_task(self) -> list:
+        openai.api_key = OPENAI_API_KEY
         response = await openai.Image.acreate(
             prompt=self.user_input, n=self.n, response_format=self.format
         )

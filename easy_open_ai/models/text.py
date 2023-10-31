@@ -5,9 +5,6 @@ import tiktoken
 
 from .api_key import OPENAI_API_KEY
 
-openai.api_key = OPENAI_API_KEY
-
-
 # ------------------------------------------------------General Custom Instructions------------------------------------------------------------
 class BaseChatCompletion:
     model = "gpt-3.5-turbo"
@@ -26,6 +23,7 @@ class BaseChatCompletion:
         ]
 
     def chat_completion_task(self) -> str:
+        openai.api_key = OPENAI_API_KEY
         response = openai.ChatCompletion.create(
             model=self.model,
             messages=self._get_messages(),
@@ -35,6 +33,7 @@ class BaseChatCompletion:
         return response["choices"][0]["message"]["content"]
 
     async def async_chat_completion_task(self) -> str:
+        openai.api_key = OPENAI_API_KEY
         response = await openai.ChatCompletion.acreate(
             model=self.model,
             messages=self._get_messages(),
@@ -98,6 +97,7 @@ class IsHarmfulText:  # free API call, no charge
         self.user_input = user_input
 
     def validation_task(self) -> list:
+        openai.api_key = OPENAI_API_KEY
         response = openai.Moderation.create(input=self.user_input)
         result = []
         r = response["results"][0]
@@ -108,6 +108,7 @@ class IsHarmfulText:  # free API call, no charge
         return result
 
     async def async_validation_task(self) -> list:
+        openai.api_key = OPENAI_API_KEY
         response = await openai.Moderation.acreate(input=self.user_input)
         result = []
         r = response["results"][0]
