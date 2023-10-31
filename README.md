@@ -5,7 +5,7 @@ _STILL ACTIVELY DEVELOPING_
 ## How to play
 
 - `pip install easy-open-ai`
-- make `.env` with `OPENAI_API_KEY=`
+- make `.env` with `OPENAI_API_KEY=` in your working folder
 - enjoy !
   - `get_picture(text, save=True)`
   - `correct_grammar(text)`
@@ -13,3 +13,5 @@ _STILL ACTIVELY DEVELOPING_
   - `get_answer_with_instruction(question,instruction`
   - `translate_text_to_Ukrainian(text)`
   - `get_n_pictures(text, n=3)`
+
+_For `async` version of a function, add `a` in front, for example, `aget_picture(text)` instead of `get_picture(text)`._
