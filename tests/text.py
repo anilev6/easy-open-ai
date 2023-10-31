@@ -3,8 +3,10 @@ import asyncio
 
 #------------------------------------------------------Operations with text------------------------------------------------------------
 
+from easy_open_ai.models.text import BaseChatCompletion, GrammarCorrection
+from easy_open_ai.models.text import IsHarmfulText, num_tokens_from_string
+
 async def test_async_custom_task():
-    from easy_open_ai.models.text import BaseChatCompletion
     instructions_and_inputs=[('Reply me as a poet in rhymes','How are you today?')]
     for i in instructions_and_inputs:
         ic(i)
@@ -20,7 +22,6 @@ def try_all():
         t()
 
 def test_correct_grammar():
-    from easy_open_ai.models.text import GrammarCorrection
     test_messages=['I is doing well, thnk you fp asking.']
     for test_message in test_messages:
         ic(test_message)
@@ -34,14 +35,12 @@ def test_change_tone():
 #------------------------------------------------------Validation------------------------------------------------------------
 
 def test_is_harmful_text():
-    from easy_open_ai.models.text import IsHarmfulText
     test_messages=['I is doing well, fuck you fp asking.']
     for test_message in test_messages:
         ic(test_message)
         ic(IsHarmfulText(test_message).validation_task())
 
 def test_count_tokens():
-    from easy_open_ai.models.text import num_tokens_from_string
     test_messages=['I is doing well, fuck you fp asking.']
     for test_message in test_messages:
         ic(test_message)
@@ -49,7 +48,7 @@ def test_count_tokens():
 
 
 if __name__=='__main__':
-    # asyncio.run(test_async_custom_task())
-    test_correct_grammar()
+    asyncio.run(test_async_custom_task())
+    # test_correct_grammar()
     # test_is_harmful_text()
     # test_count_tokens()

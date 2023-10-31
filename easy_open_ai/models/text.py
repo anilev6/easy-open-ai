@@ -3,7 +3,7 @@
 import openai
 import tiktoken
 
-from api_key import OPENAI_API_KEY
+from .api_key import OPENAI_API_KEY
 
 openai.api_key = OPENAI_API_KEY
 

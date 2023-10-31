@@ -3,15 +3,32 @@ import openai
 import os
 import base64
 
-from api_key import OPENAI_API_KEY
+from .api_key import OPENAI_API_KEY
 
 openai.api_key = OPENAI_API_KEY
 
+def normalize_file_name(file_name):
+    # Remove leading and trailing whitespace
+    file_name = file_name.strip()
+    
+    # Replace spaces with underscores
+    file_name = file_name.replace(' ', '_')
+    
+    # Remove any remaining characters that are not alphanumeric, underscores, or periods
+    file_name = ''.join(c for c in file_name if c.isalnum() or c in ('_',))
+    
+    # Limit the length of the file name (adjust as needed)
+    max_length = 255  # Typical limit for file names on many file systems
+    file_name = file_name[:max_length]
+    
+    return file_name
 
 def pic_saver(b64_json_string, file_name):  # no format
     # Decode the base64 encoded string
     decoded_json_string = base64.b64decode(b64_json_string)
-    file_path = os.path.join(os.getcwd(), f"{file_name}.png")
+    # Normalize the file name
+    normalized_file_name = normalize_file_name(file_name)
+    file_path = os.path.join(os.getcwd(), f"{normalized_file_name}.png")
     with open(file_path, "wb") as f:
         f.write(decoded_json_string)
 
