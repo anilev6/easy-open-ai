@@ -1,6 +1,7 @@
 # _Welcome to my OpenAI Playground!_
 
 Making `Open AI` even easier.
+
 _STILL ACTIVELY DEVELOPING_
 
 ## How to play
