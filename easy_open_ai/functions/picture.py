@@ -1,4 +1,4 @@
-from models.picture import PictureGenerator, pic_saver
+from ..models.picture import PictureGenerator, pic_saver
 from typing import List
 
 

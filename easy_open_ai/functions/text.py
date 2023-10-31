@@ -1,5 +1,5 @@
 """operations with texts up to 1024 tokens (around 500 words)"""
-from models.text import BaseChatCompletion, GrammarCorrection, TranslateText
+from ..models.text import BaseChatCompletion, GrammarCorrection, TranslateText
 
 
 def get_answer_with_instruction(question: str, instruction: str) -> str:
