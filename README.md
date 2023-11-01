@@ -7,14 +7,29 @@ _STILL ACTIVELY DEVELOPING_
 ## How to play
 
 - `pip install easy-open-ai`
-- make `.env` with `OPENAI_API_KEY=` in your working folder
+- in your working folder, create `.env` file with `OPENAI_API_KEY=`, or make such environment variable
 - enjoy! `from easy_open_ai import` ...
-  - `get_picture(text, save=True)`
-  - `correct_grammar(text)`
-  - `get_answer(question)`
-  - `get_answer_with_instruction(question,instruction`
-  - `translate_text_to_Ukrainian(text)`
-  - `get_n_pictures(text, n=3)`
+
+  #### Version 0.1.6
+
+  + `get_picture(text, save=True)` *(as b64_json string)*
+  + `get_n_pictures(text, n=3)`
+  
+  + `get_answer(question)`
+  + `correct_grammar(text)`
+
+  #### Version 0.1.7
+
+  + `get_picture_url(text)` *(url lives 1 hour)*
+  + `get_n_pictures_urls(text, n=3)`
+
+  + `sum_up_as_haiku(text)`
+  + `get_poem(text)`
+  + `get_answer_as_poem(question)`
+  + `autocomplete_text(text)`
+  
+  + `translate_text_to_language(text, language='Ukrainian')`
+  + `get_answer_with_instruction(question,instruction,chaos_coefficient=0.5)`
 
 More easy functions coming soon!
 
