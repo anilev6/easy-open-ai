@@ -95,7 +95,7 @@ class GetAnswerRhymes(BaseChatCompletion):
     task_for_ai = """You are a poet. You will be given a question, and your task is to answer it in a form of a poem in the same language."""
 
 
-# ------------------------------------------------------Rhymes and Poems------------------------------------------------------
+# ------------------------------------------------------Autocomplete------------------------------------------------------
 class Autocomplete(BaseChatCompletion):
     temperature = 0.6
     task_for_ai = """
@@ -117,8 +117,7 @@ def num_tokens_from_string(string: str, model_name: str = "gpt-3.5-turbo") -> in
 
 
 class IsHarmfulText:  # free API call, no charge
-    user_input = None
-
+    user_input = None # need to filter the sofisticated way of swearing as well  
     @handle_openai_error
     def validation_task(self) -> list:
         openai.api_key = OPENAI_API_KEY
