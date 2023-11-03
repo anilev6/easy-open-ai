@@ -8,38 +8,46 @@ from ..models.text import (
     GetAnswerRhymes,
     SummarizeHaiku,
     IsHarmfulText,
-    num_tokens_from_string
+    num_tokens_from_string,
 )
 
-def is_harmful_text(text:str)->list:
-    '''Free API call, unlimited. Returns list of the violations.'''
-    i=IsHarmfulText()
-    i.user_input=text
+
+def is_harmful_text(text: str) -> list:
+    """Free API call, unlimited. Returns list of the violations."""
+    i = IsHarmfulText()
+    i.user_input = text
     result = i.validation_task()
     return result
 
+
 # print(is_harmful_text('I h@te you'))
 
-async def ais_harmful_text(text:str)->list:
-    '''Free API call, unlimited. Returns list of the violations.'''
-    i=IsHarmfulText()
-    i.user_input=text
+
+async def ais_harmful_text(text: str) -> list:
+    """Free API call, unlimited. Returns list of the violations."""
+    i = IsHarmfulText()
+    i.user_input = text
     result = await i.async_validation_task()
     return result
+
 
 # import asyncio
 # print(asyncio.run(ais_harmful_text('kel yourself')))
 
-def how_many_text_tokens(text:str, model_name: str = "gpt-3.5-turbo") -> int:
-    '''Most of this package works with text no longer than 1024 tokens. This function makes no calls.'''
+
+def how_many_text_tokens(text: str, model_name: str = "gpt-3.5-turbo") -> int:
+    """Most of this package works with text no longer than 1024 tokens. This function makes no calls."""
     return num_tokens_from_string(text, model_name=model_name)
 
-async def ahow_many_text_tokens(text:str, model_name: str = "gpt-3.5-turbo") -> int:
-    '''Most of this package works with text no longer than 1024 tokens. This function makes no calls.'''
+
+async def ahow_many_text_tokens(text: str, model_name: str = "gpt-3.5-turbo") -> int:
+    """Most of this package works with text no longer than 1024 tokens. This function makes no calls."""
     return num_tokens_from_string(text, model_name=model_name)
+
 
 # import asyncio
 # print(asyncio.run(ahow_many_tokens('kel yourself')))
+
 
 def get_answer_with_instruction(
     question: str,

@@ -7,6 +7,7 @@ from .api_key import OPENAI_API_KEY
 
 from .error_handling import handle_openai_error, ahandle_openai_error
 
+
 # ------------------------------------------------------General Custom Instructions------------------------------------------------------------
 class BaseChatCompletion:
     model = "gpt-3.5-turbo"
@@ -117,7 +118,8 @@ def num_tokens_from_string(string: str, model_name: str = "gpt-3.5-turbo") -> in
 
 
 class IsHarmfulText:  # free API call, no charge
-    user_input = None # need to filter the sofisticated way of swearing as well  
+    user_input = None  # need to filter the sofisticated way of swearing as well
+
     @handle_openai_error
     def validation_task(self) -> list:
         openai.api_key = OPENAI_API_KEY
