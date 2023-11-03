@@ -19,6 +19,24 @@ async def aget_picture_url(text: str) -> str:
 #     import asyncio
 #     print(asyncio.run(aget_picture_url('an onion')))
 
+def get_n_pictures_urls(text: str, n: int = 3) -> List[str]:
+    """up to 10 pics"""
+    p = PictureGenerator(text, n=n)
+    result = p.task()
+    return result
+
+
+# print(get_n_pictures_urls('a gorgeus cat', n=2))
+
+
+async def aget_n_pictures_urls(text: str, n: int = 3) -> List[str]:
+    """up to 10 pics"""
+    p = PictureGenerator(text, n=n)
+    result = await p.async_task()
+    return result
+
+# import asyncio
+# print(asyncio.run(aget_n_pictures_urls('an onion')))
 
 def get_picture(text: str, save: bool = True) -> str:
     p = PictureGenerator(text, format="b64_json")
@@ -49,7 +67,7 @@ def get_n_pictures(text: str, n: int = 3, save: bool = True) -> List[str]:
     result = p.task()
     if save:
         for i in range(len(result)):
-            pic_saver(result[i], text[:15].replace(" ", "_") + f"{i+1}")
+            pic_saver(result[i], text + f"{i+1}")
     return result
 
 

@@ -28,8 +28,11 @@ _STILL ACTIVELY DEVELOPING_
   + `get_answer_as_poem(question)`
   + `autocomplete_text(text)`
   
-  + `translate_text_to_language(text, language='Ukrainian')`
-  + `get_answer_with_instruction(question,instruction,chaos_coefficient=0.5)`
+  + `translate_text(text, language='Ukrainian')`
+  + `get_answer_with_instruction(question,instruction,
+            chaos_coefficient=0.5,
+            model="gpt-3.5-turbo",
+            max_tokens=1024)`
 
 More easy functions coming soon!
 

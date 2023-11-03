@@ -5,6 +5,8 @@ import base64
 
 from .api_key import OPENAI_API_KEY
 
+from .error_handling import handle_openai_error,ahandle_openai_error
+
 def normalize_file_name(file_name):
     # Remove leading and trailing whitespace
     file_name = file_name.strip()
@@ -48,6 +50,7 @@ class PictureGenerator:
         self.n = n  # length of the output list; amount of options
         self.format = format  #'b64_json'
 
+    @handle_openai_error
     def task(self) -> list:
         openai.api_key = OPENAI_API_KEY
         response = openai.Image.create(
@@ -58,6 +61,7 @@ class PictureGenerator:
             result.append(i[self.format])
         return result
 
+    @ahandle_openai_error
     async def async_task(self) -> list:
         openai.api_key = OPENAI_API_KEY
         response = await openai.Image.acreate(
