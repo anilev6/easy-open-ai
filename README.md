@@ -38,7 +38,8 @@ _STILL ACTIVELY DEVELOPING_
             max_tokens=1024)`
 
   #### Version 0.1.8
-  + `stream_answer(question)`
+  
+  + `stream_answer(question)` *(it's a generator)*
 
 More easy functions coming soon!
 
