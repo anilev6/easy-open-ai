@@ -2,7 +2,11 @@ import warnings
 import time
 import asyncio
 
+warnings.formatwarning = (
+    lambda message, category, filename, lineno, line=None: f"{category.__name__}: {message}\n"
+)
 
+# https://platform.openai.com/docs/guides/error-codes/python-library-error-types
 ERROR_HANDLERS = {
     "RateLimitError": "You have hit your assigned rate limit. Pace your requests. Read more in our Rate limit guide.",
     "InvalidRequestError": "Your request was malformed or missing some required parameters, such as a token or an input. Check the documentation for the specific API method you are calling and make sure you are sending valid and complete parameters.",
@@ -15,6 +19,18 @@ RETRY_ERROR_HANDLERS = {
     "APIConnectionError": "Issue connecting to our services. Check your network settings, proxy configuration, SSL certificates, or firewall rules.",
     "ServiceUnavailableError": "Issue on our servers. Contact us if the issue persists. Check the status page.",
 }
+
+
+class EasyOpenAIException(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
+class EasyOpenAIRetryException(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
 
 
 def handle_openai_error(func):
@@ -30,10 +46,12 @@ def handle_openai_error(func):
             error_type = type(e).__name__
             error_message = ERROR_HANDLERS.get(error_type)
             if error_message:
-                raise Exception(error_message) from None
+                raise EasyOpenAIException(error_message) from None
             retry_error_message = RETRY_ERROR_HANDLERS.get(error_type)
             if retry_error_message:
-                raise Exception("Please retry later." + retry_error_message) from None
+                raise EasyOpenAIRetryException(
+                    "Please retry later. " + retry_error_message
+                ) from None
             else:
                 raise e from None
 
@@ -58,7 +76,7 @@ def retry_with_backoff(max_retries=3, initial_sleep=1):
                     else:
                         raise e from None
 
-            raise Exception(
+            raise EasyOpenAIRetryException(
                 f"Max retries ({max_retries}) reached. Could not complete the operation."
             ) from None
 
@@ -80,10 +98,12 @@ def ahandle_openai_error(func):
             error_type = type(e).__name__
             error_message = ERROR_HANDLERS.get(error_type)
             if error_message:
-                raise Exception(error_message) from None
+                raise EasyOpenAIException(error_message) from None
             retry_error_message = RETRY_ERROR_HANDLERS.get(error_type)
             if retry_error_message:
-                raise Exception("Please retry later. " + retry_error_message) from None
+                raise EasyOpenAIRetryException(
+                    "Please retry later. " + retry_error_message
+                ) from None
             else:
                 raise e from None
 
@@ -100,7 +120,6 @@ def aretry_with_backoff(max_retries=3, initial_sleep=1):
                 except Exception as e:
                     error_type = type(e).__name__
                     if error_type in RETRY_ERROR_HANDLERS:
-                        print(f"Retry ({retries + 1}/{max_retries}): {RETRY_ERROR_HANDLERS[error_type]}")
                         warnings.warn(
                             f"Retry ({retries + 1}/{max_retries}): {RETRY_ERROR_HANDLERS[error_type]}"
                         )
@@ -108,7 +127,7 @@ def aretry_with_backoff(max_retries=3, initial_sleep=1):
                         await asyncio.sleep(initial_sleep * retries)
                     else:
                         raise e from None
-            raise Exception(
+            raise EasyOpenAIRetryException(
                 f"Max retries ({max_retries}) reached. Could not complete the operation."
             ) from None
 

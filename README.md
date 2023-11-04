@@ -37,6 +37,9 @@ _STILL ACTIVELY DEVELOPING_
             model="gpt-3.5-turbo",
             max_tokens=1024)`
 
+  #### Version 0.1.8
+  + `stream_answer(question)`
+
 More easy functions coming soon!
 
 _For `async` version of a function, add `a` in front, for example, `aget_picture(text)` instead of `get_picture(text)`._

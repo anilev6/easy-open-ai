@@ -10,18 +10,6 @@ from easy_open_ai.functions.picture import (
 import asyncio
 
 
-def test_get_picture():
-    text = "a black kitty"
-    ic(text)
-    ic(get_picture(text))
-
-
-def test_get_n_pictures():
-    text = "a small kitty"
-    ic(text)
-    ic(get_n_pictures(text, n=2))
-
-
 def test_get_picture_url():
     text = "a cute puppy"
     ic(text)
@@ -32,6 +20,18 @@ def test_get_n_pictures_urls():
     text = "a big puppy"
     ic(text)
     ic(get_n_pictures_urls(text))
+
+
+def test_get_picture():
+    text = "a black kitty"
+    ic(text)
+    ic(get_picture(text))
+
+
+def test_get_n_pictures():
+    text = "a small kitty"
+    ic(text)
+    ic(get_n_pictures(text, n=2))
 
 
 # async def test_aget_picture_url():
@@ -48,5 +48,7 @@ def test_get_n_pictures_urls():
 
 if __name__ == "__main__":
     pytest.main([__file__, "-s"])
+
+    # test_get_picture_url()
 
     # asyncio.run(test_errors_and_warnings())

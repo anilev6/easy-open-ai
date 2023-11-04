@@ -25,3 +25,5 @@ from .functions.text import (
 from .functions.text import autocomplete_text, aautocomplete_text
 from .functions.text import translate_text, atranslate_text
 from .functions.text import get_answer_with_instruction, aget_answer_with_instruction
+
+from .models.error_handling import EasyOpenAIException, EasyOpenAIRetryException

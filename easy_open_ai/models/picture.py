@@ -54,6 +54,7 @@ class PictureGenerator:
 
     @handle_openai_error
     def task(self) -> list:
+        # raise openai.error.APIError # test error handling https://github.com/openai/openai-python/blob/main/openai/error.py
         openai.api_key = OPENAI_API_KEY
         response = openai.Image.create(
             prompt=self.user_input, n=self.n, response_format=self.format
