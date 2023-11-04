@@ -24,7 +24,7 @@ _STILL ACTIVELY DEVELOPING_
   + `get_n_pictures_urls(text, n=3)`
 
   + `is_harmful_text(text)` *(sometimes ignores censorship escaping: '@' instead of 'a', etc)*
-  + `how_many_text_tokens(text)` *(Most of this package works with text no longer than 1024 text-tokens, it's recommended for validating the text length)*
+  + `how_many_text_tokens(text)` *(most of this package works with text no longer than 1024 text-tokens, it's recommended for validating the text length)*
   
   + `sum_up_as_haiku(text)`
   + `get_poem(text)`
@@ -38,7 +38,7 @@ _STILL ACTIVELY DEVELOPING_
             max_tokens=1024)`
 
   #### Version 0.1.8
-  
+
   + `stream_answer(question)` *(it's a generator)*
 
 More easy functions coming soon!
