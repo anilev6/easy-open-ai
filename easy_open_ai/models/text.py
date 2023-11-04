@@ -13,7 +13,7 @@ class BaseChatCompletion:
     DEFAULT_MAX_TOKENS = 1024
     DEFAULT_TEMPERATURE = 0
     DEFAULT_MODEL = "gpt-3.5-turbo"
-    DEFAULT_TASK_FOR_AI = ""
+    DEFAULT_TASK_FOR_AI = "You are a helpful assistant."
 
     def __init__(
         self,

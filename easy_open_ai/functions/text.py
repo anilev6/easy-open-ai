@@ -131,16 +131,14 @@ async def asum_up_as_haiku(text: str) -> str:
 
 
 def get_answer(question: str) -> str:
-    task_for_ai = "You are a helpful assistant"
-    b = BaseChatCompletion(question, task_for_ai=task_for_ai)
+    b = BaseChatCompletion(question)
     b.temperature = 0.5
     result = b.chat_completion_task()
     return result
 
 
 async def aget_answer(question: str) -> str:
-    task_for_ai = "You are a helpful assistant"
-    b = BaseChatCompletion(question, task_for_ai=task_for_ai)
+    b = BaseChatCompletion(question)
     b.temperature = 0.5
     result = await b.async_chat_completion_task()
     return result
