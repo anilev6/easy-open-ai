@@ -63,8 +63,7 @@ class GrammarCorrection(BaseChatCompletion):
 # ------------------------------------------------------Translate----------------------------------------------------------------------
 class TranslateText(BaseChatCompletion):
     def __init__(self, user_input, target_language=None):
-        self.target_language = target_language
-        self.task_for_ai = f"You will be provided with a text, and your task is to translate it into {self.target_language}."
+        self.task_for_ai = f"You will be provided with a text, and your task is to translate it into {target_language}."
         self.user_input = user_input
         self.model = DEFAULT_MODEL
         self.max_tokens = DEFAULT_MAX_TOKENS
