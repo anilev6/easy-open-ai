@@ -14,25 +14,24 @@ from ..models.text import (
 
 def is_harmful_text(text: str) -> list:
     """Free API call, unlimited. Returns list of the violations."""
-    i = IsHarmfulText()
-    i.user_input = text
+    i = IsHarmfulText(text)
     result = i.validation_task()
     return result
 
 
-# print(is_harmful_text('I h@te you'))
+# print(is_harmful_text("I h@te you"))
 
 
 async def ais_harmful_text(text: str) -> list:
     """Free API call, unlimited. Returns list of the violations."""
-    i = IsHarmfulText()
-    i.user_input = text
+    i = IsHarmfulText(text)
     result = await i.async_validation_task()
     return result
 
 
 # import asyncio
-# print(asyncio.run(ais_harmful_text('kel yourself')))
+
+# print(asyncio.run(ais_harmful_text("kel yourself")))
 
 
 def how_many_text_tokens(text: str, model_name: str = "gpt-3.5-turbo") -> int:
@@ -46,7 +45,8 @@ async def ahow_many_text_tokens(text: str, model_name: str = "gpt-3.5-turbo") ->
 
 
 # import asyncio
-# print(asyncio.run(ahow_many_tokens('kel yourself')))
+
+# print(asyncio.run(ahow_many_text_tokens("kel yourself")))
 
 
 def get_answer_with_instruction(
@@ -57,17 +57,20 @@ def get_answer_with_instruction(
     max_tokens=1024,
 ) -> str:
     """The endpoint is ChatCompletion."""
-    b = BaseChatCompletion()
+    b = BaseChatCompletion(question, task_for_ai=instruction)
     b.model = model
     b.temperature = chaos_coefficient
     b.max_tokens = max_tokens
-    b.task_for_ai = instruction
-    b.user_input = question
     result = b.chat_completion_task()
     return result
 
 
-# print(get_answer_with_instruction('You are my best friend I love you','your task is to return this text as a poem'))
+# print(
+#     get_answer_with_instruction(
+#         "You are my best friend I love you",
+#         "your task is to return this text as a poem",
+#     )
+# )
 
 
 async def aget_answer_with_instruction(
@@ -78,12 +81,10 @@ async def aget_answer_with_instruction(
     max_tokens=1024,
 ) -> str:
     """The endpoint is ChatCompletion."""
-    b = BaseChatCompletion()
+    b = BaseChatCompletion(question, task_for_ai=instruction)
     b.model = model
     b.temperature = chaos_coefficient
     b.max_tokens = max_tokens
-    b.task_for_ai = instruction
-    b.user_input = question
     result = await b.async_chat_completion_task()
     return result
 
@@ -93,8 +94,7 @@ async def aget_answer_with_instruction(
 
 
 def translate_text(text: str, language="Ukrainian") -> str:
-    t = TranslateText(language)
-    t.user_input = text
+    t = TranslateText(text, target_language=language)
     result = t.chat_completion_task()
     return result
 
@@ -103,8 +103,7 @@ def translate_text(text: str, language="Ukrainian") -> str:
 
 
 async def atranslate_text(text: str, language="Ukrainian") -> str:
-    t = TranslateText(language)
-    t.user_input = text
+    t = TranslateText(text, target_language=language)
     result = await t.async_chat_completion_task()
     return result
 
@@ -114,8 +113,7 @@ async def atranslate_text(text: str, language="Ukrainian") -> str:
 
 
 def autocomplete_text(text: str) -> str:
-    b = Autocomplete()
-    b.user_input = text
+    b = Autocomplete(text)
     result = b.chat_completion_task()
     return result
 
@@ -124,8 +122,7 @@ def autocomplete_text(text: str) -> str:
 
 
 async def aautocomplete_text(text: str) -> str:
-    b = Autocomplete()
-    b.user_input = text
+    b = Autocomplete(text)
     result = await b.async_chat_completion_task()
     return result
 
@@ -135,8 +132,7 @@ async def aautocomplete_text(text: str) -> str:
 
 
 def get_answer_as_poem(question: str) -> str:
-    b = GetAnswerRhymes()
-    b.user_input = question
+    b = GetAnswerRhymes(question)
     result = b.chat_completion_task()
     return result
 
@@ -145,8 +141,7 @@ def get_answer_as_poem(question: str) -> str:
 
 
 async def aget_answer_as_poem(question: str) -> str:
-    b = GetAnswerRhymes()
-    b.user_input = question
+    b = GetAnswerRhymes(question)
     result = await b.async_chat_completion_task()
     return result
 
@@ -156,8 +151,7 @@ async def aget_answer_as_poem(question: str) -> str:
 
 
 def get_poem(text: str) -> str:
-    b = GetPoem()
-    b.user_input = text
+    b = GetPoem(text)
     result = b.chat_completion_task()
     return result
 
@@ -166,8 +160,7 @@ def get_poem(text: str) -> str:
 
 
 async def aget_poem(text: str) -> str:
-    b = GetPoem()
-    b.user_input = text
+    b = GetPoem(text)
     result = await b.async_chat_completion_task()
     return result
 
@@ -177,8 +170,7 @@ async def aget_poem(text: str) -> str:
 
 
 def sum_up_as_haiku(text: str) -> str:
-    b = SummarizeHaiku()
-    b.user_input = text
+    b = SummarizeHaiku(text)
     result = b.chat_completion_task()
     return result
 
@@ -187,8 +179,7 @@ def sum_up_as_haiku(text: str) -> str:
 
 
 async def asum_up_as_haiku(text: str) -> str:
-    b = SummarizeHaiku()
-    b.user_input = text
+    b = SummarizeHaiku(text)
     result = await b.async_chat_completion_task()
     return result
 
@@ -198,9 +189,8 @@ async def asum_up_as_haiku(text: str) -> str:
 
 
 def get_answer(question: str) -> str:
-    b = BaseChatCompletion()
-    b.user_input = question
-    b.task_for_ai = "You are a helpful assistant"
+    task_for_ai = "You are a helpful assistant"
+    b = BaseChatCompletion(question, task_for_ai=task_for_ai)
     b.temperature = 0.5
     result = b.chat_completion_task()
     return result
@@ -210,17 +200,15 @@ def get_answer(question: str) -> str:
 
 
 async def aget_answer(question: str) -> str:
-    b = BaseChatCompletion()
-    b.user_input = question
-    b.task_for_ai = "You are a helpful assistant"
+    task_for_ai = "You are a helpful assistant"
+    b = BaseChatCompletion(question, task_for_ai=task_for_ai)
     b.temperature = 0.5
     result = await b.async_chat_completion_task()
     return result
 
 
 def correct_grammar(text: str) -> str:
-    g = GrammarCorrection()
-    g.user_input = text
+    g = GrammarCorrection(text)
     result = g.chat_completion_task()
     return result
 
@@ -229,8 +217,7 @@ def correct_grammar(text: str) -> str:
 
 
 async def acorrect_grammar(text: str) -> str:
-    g = GrammarCorrection()
-    g.user_input = text
+    g = GrammarCorrection(text)
     result = await g.async_chat_completion_task()
     return result
 
