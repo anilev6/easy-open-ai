@@ -1,48 +1,32 @@
+import pytest
 from icecream import ic
 import asyncio
 
+from easy_open_ai.functions.text import (
+    is_harmful_text,
+    how_many_text_tokens,
+    get_answer_with_instruction,
+    translate_text,
+    autocomplete_text,
+    get_answer_as_poem,
+    get_poem,
+    sum_up_as_haiku,
+    get_answer,
+    correct_grammar,
+    acorrect_grammar,
+)
+
 # ------------------------------------------------------Operations with text------------------------------------------------------------
-
-from easy_open_ai.models.text import IsHarmfulText, num_tokens_from_string
-
-
-async def test_async_custom_task():
-    # instructions_and_inputs = [("Reply me as a poet in rhymes", "How are you today?")]
-    # for i in instructions_and_inputs:
-    #     ic(i)
-    pass
-
-
-def try_all():
-    all_sync_tests = (test_correct_grammar,)
-    for t in all_sync_tests:
-        t()
-
-
-def test_correct_grammar():
-    # test_messages = ["I is doing well, thnk you fp asking."]
-    # for test_message in test_messages:
-    #     ic(test_message)
-    pass
-
-
-def test_change_tone():
-    pass
-
-
-# need to add more tests!
-
-# ------------------------------------------------------Validation------------------------------------------------------------
 
 
 def test_is_harmful_text():
     test_messages = ["I is doing well, fuck you fp asking."]
     for test_message in test_messages:
         ic(test_message)
-        ic(IsHarmfulText(test_message).validation_task())
+        ic(is_harmful_text(test_message))
 
 
-def test_count_tokens():
+def test_how_many_text_tokens():
     test_messages = [
         """Python, a language so profound,
         In the realm of coding, it is renowned.
@@ -66,11 +50,68 @@ def test_count_tokens():
     ]
     for test_message in test_messages:
         ic(test_message)
-        ic(num_tokens_from_string(test_message))
+        ic(how_many_text_tokens(test_message))
 
+
+def test_get_poem():
+    test_text = "The internet is a global network of computers and other devices connected together, allowing people to share information and communicate with each other. It enables access to a wide range of resources such as websites, email, social media, online shopping, streaming services, and much more. The internet has revolutionized the way we connect, learn, work, and entertain ourselves."
+    ic(test_text)
+    ic(get_poem(test_text))
+
+
+def test_translate_text():
+    test_text = "I don't care"
+    ic(test_text)
+    ic(translate_text(test_text))
+
+
+def test_autocomplete_text():
+    test_text = "I don't care if you"
+    ic(test_text)
+    ic(autocomplete_text(test_text))
+
+
+def test_get_answer_as_poem():
+    test_question = "What is Python?"
+    ic(test_question)
+    ic(get_answer_as_poem(test_question))
+
+
+def test_sum_up_as_haiku():
+    test_text = "The internet is a global network of computers and other devices connected together, allowing people to share information and communicate with each other. It enables access to a wide range of resources such as websites, email, social media, online shopping, streaming services, and much more. The internet has revolutionized the way we connect, learn, work, and entertain ourselves."
+    ic(test_text)
+    ic(sum_up_as_haiku(test_text))
+
+
+def test_get_answer():
+    test_question = "what is internet?"
+    ic(test_question)
+    ic(get_answer(test_question))
+
+
+def test_correct_grammar():
+    test_text = "wht s internit?"
+    ic(test_text)
+    ic(correct_grammar(test_text))
+
+
+def test_get_answer_with_instruction():
+    test_question = "What is the meaning of life?"
+    instruction = "You are a smart philosopher."
+    ic(test_question, instruction)
+    ic(get_answer_with_instruction(test_question, instruction))
+
+
+# async def test_acorrect_grammar():
+#     test_text='wht i thes'
+#     ic(test_text)
+#     result = await acorrect_grammar(test_text)
+#     ic(result)
+
+# async def test_errors_and_warnings():
+#     l=[test_acorrect_grammar() for _ in range(8)]
+#     await asyncio.gather(*l)
 
 if __name__ == "__main__":
-    # asyncio.run(test_async_custom_task())
-    # test_correct_grammar()
-    # test_is_harmful_text()
-    test_count_tokens()
+    pytest.main([__file__, "-s"])
+    # asyncio.run(test_errors_and_warnings())

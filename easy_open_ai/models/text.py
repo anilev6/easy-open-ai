@@ -7,18 +7,27 @@ from .api_key import OPENAI_API_KEY
 
 from .error_handling import handle_openai_error, ahandle_openai_error
 
-DEFAULT_MAX_TOKENS=1024
-DEFAULT_TEMPERATURE = 0 
-DEFAULT_MODEL = "gpt-3.5-turbo"
 
 # ------------------------------------------------------General Custom Instructions------------------------------------------------------------
 class BaseChatCompletion:
-    def __init__(self, user_input, task_for_ai = None):
-        self.task_for_ai = task_for_ai 
+    DEFAULT_MAX_TOKENS = 1024
+    DEFAULT_TEMPERATURE = 0
+    DEFAULT_MODEL = "gpt-3.5-turbo"
+    DEFAULT_TASK_FOR_AI = ""
+
+    def __init__(
+        self,
+        user_input: str,
+        task_for_ai: str = DEFAULT_TASK_FOR_AI,
+        model: str = DEFAULT_MODEL,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
+        temperature: float = DEFAULT_TEMPERATURE,
+    ):
+        self.task_for_ai = task_for_ai
         self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
-        self.temperature = DEFAULT_TEMPERATURE
+        self.model = model
+        self.max_tokens = max_tokens
+        self.temperature = temperature
 
     def _get_messages(self):
         """returns a piece of json needed for the api call"""
@@ -53,90 +62,73 @@ class BaseChatCompletion:
 # ------------------------------------------------------Grammar correction-------------------------------------------------------------
 class GrammarCorrection(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.task_for_ai = """You will be provided with statements in some language, and your task is to convert them to standard language fixing all the grammar."""
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
-        self.temperature = DEFAULT_TEMPERATURE
 
 
 # ------------------------------------------------------Translate----------------------------------------------------------------------
 class TranslateText(BaseChatCompletion):
     def __init__(self, user_input, target_language=None):
+        super().__init__(user_input)
         self.task_for_ai = f"You will be provided with a text, and your task is to translate it into {target_language}."
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
-        self.temperature = DEFAULT_TEMPERATURE
 
 
 # ------------------------------------------------------Changing Tone of Text------------------------------------------------------
 class ChangeTone(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.temperature = 0.4
         self.task_for_ai = (
             """You will be provided with a text, and your task is to change its tone."""
         )
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
 
 
 # ------------------------------------------------------Rephrasing Text------------------------------------------------------
 class RephraseText(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.temperature = 0.3
         self.task_for_ai = (
             """You will be provided with a text, and your task is to rephrase it."""
         )
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
 
 
 # ------------------------------------------------------Summarizing Text------------------------------------------------------
 class SummarizeText(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.task_for_ai = """You will be provided with a lengthy text, and your task is to summarize it."""
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
-        self.temperature = DEFAULT_TEMPERATURE
 
 
 class SummarizeHaiku(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.temperature = 0.85
         self.task_for_ai = (
             """You will be given a text, and your task is to summarize it as haiku."""
         )
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
 
 
 # ------------------------------------------------------Rhymes and Poems------------------------------------------------------
 class GetPoem(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.temperature = 0.65
         self.task_for_ai = """You are a poet. You will be given a text, and your task is to rewrite this text in a form of a poem, but preserve the meaning, language and approximate size of a text. """
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
 
 
 class GetAnswerRhymes(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.temperature = 0.9
         self.max_tokens = 512
         self.task_for_ai = """You are a poet. You will be given a question, and your task is to answer it in a form of a poem in the same language."""
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
 
 
 # ------------------------------------------------------Autocomplete------------------------------------------------------
 class Autocomplete(BaseChatCompletion):
     def __init__(self, user_input):
+        super().__init__(user_input)
         self.temperature = 0.6
         self.task_for_ai = """
         You are an autocomplete assistant. Return only the autocompleted part. Mind the spaces and punctuation.
@@ -146,9 +138,6 @@ class Autocomplete(BaseChatCompletion):
         User: I wanted to let you know
         Assistant:  we just arrived.
     """
-        self.user_input = user_input
-        self.model = DEFAULT_MODEL
-        self.max_tokens = DEFAULT_MAX_TOKENS
 
 
 # ------------------------------------------------------Text Moderation------------------------------------------------------
@@ -171,9 +160,7 @@ class IsHarmfulText:
         result = []
         r = response["results"][0]
         if r["flagged"]:
-            for k, v in r["categories"].items():
-                if v:
-                    result.append(k)
+            result = [k for k, v in r["categories"].items() if v]
         return result
 
     @ahandle_openai_error
@@ -183,7 +170,5 @@ class IsHarmfulText:
         result = []
         r = response["results"][0]
         if r["flagged"]:
-            for k, v in r["categories"].items():
-                if v:
-                    result.append(k)
+            result = [k for k, v in r["categories"].items() if v]
         return result

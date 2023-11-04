@@ -8,7 +8,6 @@ from .functions.picture import (
 from .functions.text import get_answer, aget_answer, correct_grammar, acorrect_grammar
 
 # Version 0.1.7
-from .models.error_handling import EasyOpenAIError
 from .functions.picture import (
     get_picture_url,
     aget_picture_url,
