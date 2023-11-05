@@ -1,37 +1,10 @@
-# Example of an OpenAI ChatCompletion request with stream=True
-# https://platform.openai.com/docs/guides/chat
 import openai
+from .error_handling import handle_openai_error_stream, ahandle_openai_error_stream
+
 
 from .api_key import OPENAI_API_KEY
 
-# send a ChatCompletion request to count to 100
 openai.api_key = OPENAI_API_KEY
-# response = openai.ChatCompletion.create(
-#     model="gpt-3.5-turbo",
-#     messages=[
-#         {
-#             "role": "user",
-#             "content": "Count to 10, with a comma between each number and no newlines. E.g., 1, 2, 3, ...",
-#         }
-#     ],
-#     temperature=0,
-#     stream=True,
-# )
-
-
-# collected_messages = []
-# # iterate through the stream of events
-# for chunk in response:
-#     chunk_message = chunk["choices"][0]["delta"]  # extract the message
-#     if chunk_message == {}:
-#         break
-#     collected_messages.append(chunk_message.get("content", ""))  # save the message
-#     print(chunk_message.get("content", ""))
-
-# full_reply_content = "".join(collected_messages)
-# print(f"Full conversation received: {full_reply_content}")
-
-from .error_handling import handle_openai_error_stream, ahandle_openai_error_stream
 
 
 # ------------------------------------------------------General Custom Instructions------------------------------------------------------------
