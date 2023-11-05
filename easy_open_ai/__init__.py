@@ -27,3 +27,18 @@ from .functions.text import translate_text, atranslate_text
 from .functions.text import get_answer_with_instruction, aget_answer_with_instruction
 
 from .models.error_handling import EasyOpenAIException, EasyOpenAIRetryException
+
+# Version 0.1.8
+
+from .functions.stream_text import (
+    get_answer_with_instruction_stream,
+    aget_answer_with_instruction_stream,
+    get_answer_stream,
+    aget_answer_stream,
+    translate_text_stream,
+    atranslate_text_stream,
+    get_answer_as_poem_stream,
+    aget_answer_as_poem_stream,
+    get_poem_stream,
+    aget_poem_stream,
+)
