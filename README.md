@@ -39,7 +39,13 @@ _STILL ACTIVELY DEVELOPING_
 
   #### Version 0.1.8
 
-  + `stream_answer(question)` *(it's a generator)*
+  *ADDED LIVE TEXT DISPLAYING*
+
+  + `get_answer_with_instruction_stream(question)` *(it's a generator)*
+  
+  *to get chatGPT-like live text generation, add `_stream` to the name, for example, `aget_answer_as_poem_stream(question)`*
+
+  **!not all of the available text functions have this yet**
 
 More easy functions coming soon!
 

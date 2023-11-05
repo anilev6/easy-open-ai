@@ -65,3 +65,24 @@ class BaseChatCompletionStream:
             if chunk_message == {}:
                 break
             yield chunk_message.get("content", "")
+
+# ------------------------------------------------------Translate----------------------------------------------------------------------
+class TranslateText(BaseChatCompletionStream):
+    def __init__(self, user_input, target_language=None):
+        super().__init__(user_input)
+        self.task_for_ai = f"You will be provided with a text, and your task is to translate it into {target_language}."
+
+# ------------------------------------------------------Rhymes and Poems------------------------------------------------------
+class GetPoem(BaseChatCompletionStream):
+    def __init__(self, user_input):
+        super().__init__(user_input)
+        self.temperature = 0.65
+        self.task_for_ai = """You are a poet. You will be given a text, and your task is to rewrite this text in a form of a poem, but preserve the meaning, language and approximate size of a text. """
+
+
+class GetAnswerRhymes(BaseChatCompletionStream):
+    def __init__(self, user_input):
+        super().__init__(user_input)
+        self.temperature = 0.9
+        self.max_tokens = 512
+        self.task_for_ai = """You are a poet. You will be given a question, and your task is to answer it in a form of a poem in the same language."""
