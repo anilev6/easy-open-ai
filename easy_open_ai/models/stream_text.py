@@ -31,7 +31,7 @@ openai.api_key = OPENAI_API_KEY
 # full_reply_content = "".join(collected_messages)
 # print(f"Full conversation received: {full_reply_content}")
 
-from .error_handling import handle_openai_error, ahandle_openai_error
+from .error_handling import handle_openai_error_stream, ahandle_openai_error_stream
 
 
 # ------------------------------------------------------General Custom Instructions------------------------------------------------------------
@@ -62,7 +62,7 @@ class BaseChatCompletionStream:
             {"role": "user", "content": self.user_input},
         ]
 
-    # @handle_openai_error
+    @handle_openai_error_stream
     def chat_completion_task(self) -> str:
         openai.api_key = OPENAI_API_KEY
         for chunk in openai.ChatCompletion.create(
@@ -77,7 +77,7 @@ class BaseChatCompletionStream:
                 break
             yield chunk_message.get("content", "")
 
-    # @ahandle_openai_error
+    @ahandle_openai_error_stream
     async def async_chat_completion_task(self) -> str:
         openai.api_key = OPENAI_API_KEY
         async_gen = await openai.ChatCompletion.acreate(

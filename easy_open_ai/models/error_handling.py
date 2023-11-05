@@ -134,3 +134,116 @@ def aretry_with_backoff(max_retries=3, initial_sleep=1):
         return wrapper
 
     return decorator
+
+
+def handle_openai_error_stream(func):
+    def wrapper(*args, **kwargs):
+        try:
+
+            @retry_with_backoff_stream(max_retries=3, initial_sleep=1)
+            def retry_wrapper():
+                for item in func(*args, **kwargs):
+                    yield item
+
+            for i in retry_wrapper():
+                yield i
+
+        except Exception as e:
+            error_type = type(e).__name__
+            error_message = ERROR_HANDLERS.get(error_type)
+            if error_message:
+                raise EasyOpenAIException(error_message) from None
+            retry_error_message = RETRY_ERROR_HANDLERS.get(error_type)
+            if retry_error_message:
+                raise EasyOpenAIRetryException(
+                    "Please retry later. " + retry_error_message
+                ) from None
+            else:
+                raise e from None
+
+    return wrapper
+
+
+def retry_with_backoff_stream(max_retries=3, initial_sleep=1):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            retries = 0
+            while retries < max_retries:
+                try:
+                    for i in func(*args, **kwargs):
+                        yield i
+                    break
+                except Exception as e:
+                    error_type = type(e).__name__
+                    if error_type in RETRY_ERROR_HANDLERS:
+                        warnings.warn(
+                            f"Retry ({retries + 1}/{max_retries}): {RETRY_ERROR_HANDLERS[error_type]}"
+                        )
+                        retries += 1
+                        time.sleep(initial_sleep * retries)
+                    else:
+                        raise e from None
+            if retries >= max_retries:
+                raise EasyOpenAIRetryException(
+                    f"Max retries ({retries}) reached. Could not complete the operation."
+                ) from None
+
+        return wrapper
+
+    return decorator
+
+
+def ahandle_openai_error_stream(func):
+    async def wrapper(*args, **kwargs):
+        try:
+
+            @aretry_with_backoff_stream(max_retries=3, initial_sleep=1)
+            async def retry_wrapper():
+                async for item in func(*args, **kwargs):
+                    yield item
+
+            async for i in retry_wrapper():
+                yield i
+        except Exception as e:
+            error_type = type(e).__name__
+            error_message = ERROR_HANDLERS.get(error_type)
+            if error_message:
+                raise EasyOpenAIException(error_message) from None
+            retry_error_message = RETRY_ERROR_HANDLERS.get(error_type)
+            if retry_error_message:
+                raise EasyOpenAIRetryException(
+                    "Please retry later. " + retry_error_message
+                ) from None
+            else:
+                raise e from None
+
+    return wrapper
+
+
+def aretry_with_backoff_stream(max_retries=3, initial_sleep=1):
+    def decorator(func):
+        async def wrapper(*args, **kwargs):
+            retries = 0
+            while retries < max_retries:
+                try:
+                    async for i in func(*args, **kwargs):
+                        yield i
+                    break
+                except Exception as e:
+                    error_type = type(e).__name__
+                    if error_type in RETRY_ERROR_HANDLERS:
+                        warnings.warn(
+                            f"Retry ({retries + 1}/{max_retries}): {RETRY_ERROR_HANDLERS[error_type]}"
+                        )
+                        retries += 1
+                        await asyncio.sleep(initial_sleep * retries)
+                    else:
+                        raise e from None
+            if retries >= max_retries:
+                raise EasyOpenAIRetryException(
+                    f"Max retries ({retries}) reached. Could not complete the operation."
+                ) from None
+
+        return wrapper
+
+    return decorator
