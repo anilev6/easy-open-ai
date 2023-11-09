@@ -29,7 +29,6 @@ def test_get_picture():
 
 
 def test_get_n_pictures():
-    'hehehe'
     text = "a small kitty"
     ic(text)
     ic(get_n_pictures(text, n=2))
