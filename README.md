@@ -47,6 +47,10 @@ _STILL ACTIVELY DEVELOPING_
 
   **!not all of the available text functions have this yet**
 
+#### Version 0.1.9
+
++ Automatic documentation for your functions in a python file with `docstring file_name.py` terminal command (or `docstring path\to\file_name.py `). If the docstring is already present, it will **NOT** overwrite it.
+
 More easy functions coming soon!
 
 _For `async` version of a function, add `a` in front, for example, `aget_picture(text)` instead of `get_picture(text)`._
