@@ -13,7 +13,10 @@ tiktoken = "^0.5.1"
 pytest = "^7.4.3"
 
 [tool.poetry.scripts]
-docstring = "easy_open_ai.docstrings:main"
+docstring = "easy_open_ai.fastapi_docstrings:main"
+
+[tool.poetry.group.dev.dependencies]
+fastapi = "^0.104.1"
 
 [build-system]
 requires = ["poetry-core"]

@@ -49,7 +49,7 @@ _STILL ACTIVELY DEVELOPING_
 
 #### Version 0.1.9
 
-+ Automatic documentation for your functions in a python file with `docstring file_name.py` terminal command (or `docstring path\to\file_name.py `). If the docstring is already present, it will **NOT** overwrite it.
++ Automatic documentation for your **FastAPI functions** in a python file with `docstring file_name.py` terminal command (or `docstring path\to\file_name.py `). If the docstring is already present, it will **NOT** overwrite it.
 
 More easy functions coming soon!
 
