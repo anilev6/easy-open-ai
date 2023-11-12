@@ -68,7 +68,7 @@ def generate_general_docstring(function_block):
 
 
 def is_fastapi_decorator(decorator: str) -> bool:
-    return ('.get("/' or ".get('/" or ".post('/" or '.post("/' or ".delete('/" or '.delete("/' or ".put('/" or '.put("/') in decorator
+    return '.get("/' in decorator or ".get('/" in decorator or ".post('/" in decorator or '.post("/' in decorator or ".delete('/" in decorator or '.delete("/' in decorator or ".put('/" in decorator or '.put("/' in decorator
 
 
 def is_fastapi_function(node) -> str:

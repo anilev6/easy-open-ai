@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "easy-open-ai"
-version = "0.1.9"
+version = "0.2.0"
 description = "This is my first REAL package."
 authors = ["ani <125677472+anilev6@users.noreply.github.com>"]
 readme = "README.md"
