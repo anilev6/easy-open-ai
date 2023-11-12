@@ -11,9 +11,10 @@ icecream = "^2.1.3"
 openai = "^0.28.1"
 tiktoken = "^0.5.1"
 pytest = "^7.4.3"
+astor = "^0.8.1"
 
 [tool.poetry.scripts]
-docstring = "easy_open_ai.fastapi_docstrings:main"
+docstring = "easy_open_ai.docstrings:main"
 
 [tool.poetry.group.dev.dependencies]
 fastapi = "^0.104.1"
