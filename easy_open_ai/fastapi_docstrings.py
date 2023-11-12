@@ -2,23 +2,29 @@ import sys
 import ast
 from .functions.text import get_answer_with_instruction
 
-def is_fastapi_decorator(decorator):
-    from fastapi import APIRouter #, APIRoute, APIRouterDefault, APIWebSocketRoute, APIWebSocketsRoute
-    fastapi_router_classes = (
-        APIRouter,
-        # APIRoute,
-        # APIRouterDefault,
-        # APIWebSocketRoute,
-        # APIWebSocketsRoute,
-    )
 
-    return isinstance(decorator, fastapi_router_classes)
+def get_function_definition_line(function_block: str) -> str:
+    l = function_block.split("\n")
+    for i in l:
+        if i.strip().startswith("def ") or i.strip().startswith("async def "):
+            return i.strip()
 
 
+def is_fastapi_decorator(decorator: str) -> bool:
+    return (".get('/" or ".post('/") in decorator
 
-def extract_fastapi_functions_from_file(file_path) -> dict:
+
+def is_fastapi_function(node) -> str:
+    for d in node.decorator_list:
+        if is_fastapi_decorator(ast.unparse(d)):
+            return True
+    return False
+
+
+def extract_all_functions_from_file(file_path) -> dict:
     """ignores a function if it has a docstring though"""
-    functions = {}
+    fastapi_functions = {}
+    other_functions = {}
 
     with open(file_path, "r") as file:
         file_contents = file.read()
@@ -31,16 +37,17 @@ def extract_fastapi_functions_from_file(file_path) -> dict:
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             if not ast.get_docstring(node):
-                print('here')
-                if any(
-                    is_fastapi_decorator(decorator) for decorator in node.decorator_list
-                ):
-                    # function_name = node.name
+                if is_fastapi_function(node):
                     function_body = ast.unparse(node)
-                    functions[function_body.split("\n")[0]] = function_body
-                    print('im here')
-
-    return functions
+                    fastapi_functions[
+                        get_function_definition_line(function_body)
+                    ] = function_body
+                else:
+                    function_body = ast.unparse(node)
+                    other_functions[
+                        get_function_definition_line(function_body)
+                    ] = function_body
+    return {"fastapi": fastapi_functions, "other": other_functions}
 
 
 # if __name__ == "__main__":
@@ -54,7 +61,8 @@ def extract_fastapi_functions_from_file(file_path) -> dict:
 #     print(function_dict)
 
 
-def generate_docstring(function_block):
+def generate_fastapi_docstring(function_block):
+    print("gen_fastapi_docs")
     instruction = """Generate a docstring for a FastAPI endpoint Python source code with the following instructions:
 
         1. The endpoint is defined in the source code and accessible at http://example.com/api/v1/contacts/, do not include this information in dockstring.
@@ -89,9 +97,31 @@ def generate_docstring(function_block):
 
     """
     question = function_block
-    return get_answer_with_instruction(
-        question, instruction, chaos_coefficient=0, max_tokens=90000
-    )
+    return get_answer_with_instruction(question, instruction, chaos_coefficient=0)
+
+
+def generate_general_docstring(function_block):
+    instruction = '''
+    1. Generate a docstring for a Python source code like in this example:
+
+        def add(a: int, b: int) -> int:
+            """
+            Returns the sum of two integers.
+
+            :param a: The first integer.
+            :type a: int
+            :param b: The second integer.
+            :type b: int
+            :return: The sum of a and b.
+            :rtype: int
+            """
+            return a + b
+    
+    2. return ONLY the docstring to the user .
+
+    '''
+    question = function_block
+    return get_answer_with_instruction(question, instruction, chaos_coefficient=0)
 
 
 def count_leading_whitespace(line):
@@ -114,7 +144,11 @@ def process_file(file_path):
     """
     Processes the given Python file and adds docstrings to functions without one.
     """
-    func_dict = extract_fastapi_functions_from_file(file_path)
+    functions = extract_all_functions_from_file(file_path)
+    fastapi_func_dict = functions["fastapi"]
+    print(fastapi_func_dict)
+    others_func_dict = functions["other"]
+    print(others_func_dict)
     try:
         with open(file_path, "r") as file:
             lines = file.readlines()
@@ -122,14 +156,16 @@ def process_file(file_path):
         new_lines = []
         for line in lines:
             new_lines.append(line)
-            if line.strip() in func_dict:
-                docst = (
-                    get_leading_whitespace(line)
-                    + r'"""'
-                    + generate_docstring(func_dict[line.strip()])
-                    + r'"""'
-                    + "\n"
-                )
+            print(line.strip())
+            if line.strip() in fastapi_func_dict:
+                print('here')
+                doc = generate_fastapi_docstring(fastapi_func_dict[line.strip()])
+                docst = get_leading_whitespace(line) + r'"""' + doc + r'"""' + "\n"
+                new_lines.append(docst)
+            elif line.strip() in others_func_dict:
+                print('here1')
+                doc = generate_general_docstring(others_func_dict[line.strip()])
+                docst = get_leading_whitespace(line)  + doc  + "\n"
                 new_lines.append(docst)
 
         # Write the updated content to the same file

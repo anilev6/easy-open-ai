@@ -2,23 +2,30 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
+
 class Depends:
     pass
+
 
 def get_db():
     pass
 
-def get_current_user():
-    pass
 
 class Session:
     pass
 
+
 class User:
     pass
 
+
+def get_current_user(user: User) -> str:
+    return User.name
+
+
 class ResponseContact:
     pass
+
 
 @router.get("/")
 async def list_contacts(
@@ -30,6 +37,4 @@ async def list_contacts(
     email: str = None,
     current_user: User = Depends(get_current_user()),
 ) -> list[ResponseContact] | ResponseContact:
-
     return 1
-
